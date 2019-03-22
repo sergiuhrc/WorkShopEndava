@@ -5,11 +5,15 @@ import com.endava.demo.entity.Intern;
 import java.util.List;
 
 public interface InternService {
-    public List<Intern> getAllInterns();
+     List<Intern> getAllInterns();
 
-    public void add(Intern intern);
+     void add(Intern intern);
+
     int getMaxId();
+
     void delete(int id);
+
     Intern update(int id);
+
     void addAfterUpdate(Intern intern);
 }

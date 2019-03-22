@@ -26,7 +26,8 @@ public class InternServiceImpl implements InternService {
 
         internDAO.save(intern);
     }
- @Override
+
+    @Override
     public void addAfterUpdate(@Autowired Intern intern) {
 
         internDAO.saveAfterUpdate(intern);
@@ -35,7 +36,7 @@ public class InternServiceImpl implements InternService {
 
     @Override
     public int getMaxId() {
-       return  internDAO.getMaxId();
+        return internDAO.getMaxId();
 
     }
 
@@ -47,7 +48,7 @@ public class InternServiceImpl implements InternService {
 
     @Override
     public Intern update(int id) {
-       return internDAO.update(id);
+        return internDAO.update(id);
     }
 
 }

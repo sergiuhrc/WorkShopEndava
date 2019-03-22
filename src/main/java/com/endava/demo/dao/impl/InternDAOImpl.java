@@ -19,7 +19,7 @@ public class InternDAOImpl implements InternDAO {
         internList.add(new Intern(101, "Mihaela", 21, JAVA));
         internList.add(new Intern(2, "Eugen", 18, JAVA));
         internList.add(new Intern(3, "Xenia", 19, JAVA));
-//        internList.add(new Intern(4, "Denisa", 21, ANALYST));
+
     }
 
     @Override
@@ -30,7 +30,7 @@ public class InternDAOImpl implements InternDAO {
     @Override
     public void save(Intern intern) {
 
-        if (internList.size() <= 0) {
+        if (internList.isEmpty()) {
 
             intern.setId(0);
         } else {
@@ -44,9 +44,9 @@ public class InternDAOImpl implements InternDAO {
     @Override
     public void saveAfterUpdate(Intern intern) {
 
-        if (internList.size() <= 0) {
+        if (internList.isEmpty()) {
 
-//            intern.setId(0);
+            intern.setId(0);
         } else {
 
             intern.setId(intern.getId());
@@ -64,10 +64,6 @@ public class InternDAOImpl implements InternDAO {
         System.out.println("-------------------------------------------");
         System.out.println(internList);
 
-
-    }
-
-    public static void main(String[] args) {
 
     }
 
@@ -91,13 +87,12 @@ public class InternDAOImpl implements InternDAO {
         for (Intern i : new ArrayList<>(internList)) {
             if (i.getId() == id) {
 
-//                internList.get(id);
+
                 intern.setId(i.getId());
                 intern.setName(i.getName());
                 intern.setAge(i.getAge());
                 intern.setStream(i.getStream());
 
-//            System.out.println( internList.get(id));
 
                 return intern;
             }
@@ -108,7 +103,4 @@ public class InternDAOImpl implements InternDAO {
     }
 }
 
-//    public static void main(String[] args) {
-//        System.out.println("Max: "+getMaxId());
-//    }
 
