@@ -5,10 +5,13 @@ import com.endava.demo.entity.Intern;
 import java.util.List;
 
 public interface InternDAO {
-     List<Intern> findAll();
+    List<Intern> findAll();
+
     void save(Intern intern);
-    void saveAfterUpdate(Intern intern);
-    int getMaxId();
+
+    void update(Intern intern);
+
     void delete(int id);
-    Intern update(int id);
+
+    Intern getObjectForUpdate(int id);
 }

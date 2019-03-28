@@ -28,7 +28,7 @@ public class InternController {
     }
 
     @RequestMapping("/newFormUpdate/{id}")
-    public String secondViewUpdate(Model model,@PathVariable int id ) {
+    public String secondViewUpdate(Model model, @PathVariable int id) {
 
         model.addAttribute("intern", internService.update(id));
         return "newFormUpdate";
@@ -36,20 +36,18 @@ public class InternController {
 
     @RequestMapping(value = "/newFormUpdate", method = RequestMethod.POST)
     public String updateForm(@ModelAttribute Intern intern) {
-        internService.addAfterUpdate(intern);
+        internService.update(intern);
         return "redirect:/";
     }
 
     @GetMapping(value = "/delete/{id}")
     public String deleteIntern(@PathVariable int id) {
-
         internService.delete(id);
         return "redirect:/";
     }
 
     @GetMapping(value = "/update/{id}")
     public String updateIntern(@PathVariable int id) {
-        System.out.println(internService.update(id));
         internService.update(id);
         return "redirect:/newFormUpdate/{id}";
     }

@@ -4,89 +4,86 @@ import com.endava.demo.dao.InternDAO;
 import com.endava.demo.entity.Intern;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.endava.demo.entity.InternStreams.JAVA;
 
 @Repository
 public class InternDAOImpl implements InternDAO {
 
-    private static List<Intern> internList = new ArrayList<>();
 
-    static {
-        internList.add(new Intern(0, "Joric", 21, JAVA));
-        internList.add(new Intern(101, "Mihaela", 21, JAVA));
-        internList.add(new Intern(2, "Eugen", 18, JAVA));
-        internList.add(new Intern(3, "Xenia", 19, JAVA));
+    EntityManagerFactory emf = Persistence.createEntityManagerFactory("pu");
+    @PersistenceContext()
+    EntityManager em = emf.createEntityManager();
 
-    }
 
     @Override
     public List<Intern> findAll() {
-        return internList;
+        TypedQuery<Intern> query = (TypedQuery<Intern>) em.createNativeQuery("SELECT * FROM intern ORDER BY id", Intern.class);
+
+        return query.getResultList();
+
     }
 
     @Override
     public void save(Intern intern) {
-
-        if (internList.isEmpty()) {
-
-            intern.setId(0);
-        } else {
-
-            intern.setId(getMaxId() + 1);
-        }
-        internList.add(intern);
-
+        em.getTransaction().begin();
+        em.persist(intern);
+        em.getTransaction().commit();
     }
 
     @Override
-    public void saveAfterUpdate(Intern intern) {
+    public void update(Intern intern) {
 
-        if (internList.isEmpty()) {
+        TypedQuery<Intern> query = (TypedQuery<Intern>) em.createNativeQuery("SELECT * from intern ", Intern.class);
+        ArrayList<Intern> list = (ArrayList<Intern>) query.getResultList();
+        //in case somebody deleted the object before update
+        if (list.isEmpty()) {
+            em.getTransaction().begin();
+            em.merge(intern);
+            em.getTransaction().commit();
 
-            intern.setId(0);
         } else {
 
             intern.setId(intern.getId());
         }
-        int index = 0;
-        for (Intern i : internList) {
-            System.out.println(i.getId());
 
+        for (Intern i : list) {
             if (intern.getId() == i.getId()) {
-                System.out.println(index);
-                internList.set(index, intern);
+                em.getTransaction().begin();
+                em.merge(intern);
+                em.getTransaction().commit();
             }
-            index++;
+
         }
-        System.out.println("-------------------------------------------");
-        System.out.println(internList);
 
 
     }
 
-    @Override
-    public int getMaxId() {
-        return internList.stream().mapToInt(Intern::getId).max().getAsInt();
-    }
 
     @Override
     public void delete(int id) {
-        for (Intern i : new ArrayList<>(internList)) {
-            if (i.getId() == id)
-                internList.remove(i);
+        TypedQuery<Intern> query = (TypedQuery<Intern>) em.createNativeQuery("SELECT * from intern", Intern.class);
+        ArrayList<Intern> list = (ArrayList<Intern>) query.getResultList();
+        for (Intern i : new ArrayList<>(list)) {
+            if (i.getId() == id) {
+                em.getTransaction().begin();
+                em.remove(i);
+                em.getTransaction().commit();
+            }
+
         }
+
 
     }
 
     @Override
-    public Intern update(int id) {
+    public Intern getObjectForUpdate(int id) {
         Intern intern = new Intern();
-        for (Intern i : new ArrayList<>(internList)) {
+        TypedQuery<Intern> query = (TypedQuery<Intern>) em.createNativeQuery("SELECT * from intern", Intern.class);
+        ArrayList<Intern> list = (ArrayList<Intern>) query.getResultList();
+        for (Intern i : new ArrayList<>(list)) {
             if (i.getId() == id) {
-
 
                 intern.setId(i.getId());
                 intern.setName(i.getName());
@@ -97,10 +94,9 @@ public class InternDAOImpl implements InternDAO {
                 return intern;
             }
         }
-        System.out.println(intern);
         return null;
-
     }
+
 }
 
 
